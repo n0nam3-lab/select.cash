@@ -52,7 +52,7 @@ $themechange = get_option('themechange');
         });
 
     </script>
-    <script src="//code.jivosite.com/widget/y6bVR3NXXs" async></script>
+ 
 
 
 </head>
