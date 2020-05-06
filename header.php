@@ -29,81 +29,122 @@ $themechange = get_option('themechange');
 	}
 	?>
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="liMarquee/liMarquee.css"/>
-    <script type="text/javascript" src="liMarquee/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript"src="liMarquee/jquery.liMarquee.js"></script>
+    <link rel="stylesheet" href="/wp-content/themes/exchangeboxtheme2/liMarquee/liMarquee.css"/>
+    <script type="text/javascript" src="/wp-content/themes/exchangeboxtheme2/liMarquee/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript"src="/wp-content/themes/exchangeboxtheme2/liMarquee/jquery.liMarquee.js"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(window).load(function(){
             $('.str').liMarquee();
         });
     </script>
+    <style>
+        .load1 {
+            opacity: 0;
+        }
+    </style>
+    <script>
+        $('document').ready(function() {
+            $('load1').animate({
+                    opacity: 1,
+                }, 500
+            );
+        });
 
+    </script>
     <script src="//code.jivosite.com/widget/y6bVR3NXXs" async></script>
 
 
 </head>
 
 <body <?php body_class(); ?>>
-<div class="str">&nbsp;
-    тест &nbsp; тест &nbsp; тест
-</div>
+
 
 <?php do_action('pn_header_theme'); ?>
 <!-- top rates -->
 <div class="header__rates">
-    <div class="full">
         <?php
         // MOEX RATE
 
         $dataMoex = file_get_contents('https://iss.moex.com/iss/engines/currency/markets/selt/securities.jsonp?iss.meta=off&iss.only=marketdata&securities=CETS%3AUSD000UTSTOM%2CCETS%3AEUR_RUB__TOM');
         $dataJsonMoex = json_decode($dataMoex);
+        $dataMoexCNY = file_get_contents('https://iss.moex.com/iss/engines/currency/markets/selt/securities.jsonp?iss.meta=off&iss.only=marketdata&securities=CNYRUB_TOM');
+        $dataJsonMoexCNY = json_decode($dataMoexCNY);
+//      echo '<pre>';
+//      var_dump($dataJsonMoex);
+//      echo '</pre>';
         $usd_rub_rate_moex = $dataJsonMoex->marketdata->data[1][41];
-        if (is_null($usd_rub_rate_moex)) {
+            if (is_null($usd_rub_rate_moex)) {
             $usd_rub_rate_moex = $dataJsonMoex->marketdata->data[1][8];
         }
+        $eur_rub_rate_moex = $dataJsonMoex->marketdata->data[0][41];
+            if (is_null($eur_rub_rate_moex)) {
+            $eur_rub_rate_moex = $dataJsonMoex->marketdata->data[0][8];
+        }
+            $cny_rub_rate_moex = $dataJsonMoexCNY->marketdata->data[0][8];
 
         //Binance Rate
 
-
         $dataBinance = file_get_contents('https://api.binance.com/api/v3/ticker/price');
         $dataBinanceJson = json_decode($dataBinance);
-        //            echo "<pre>";
-        //
-        //            var_dump($dataBinanceJson);   fdfdfdfd
-        $BTC_USDT_RATE_binance = ($dataBinanceJson[11]->price);
-        $BTC_RUB_RATE = $BTC_USDT_RATE_binance * $usd_rub_rate_moex;
-
-        $ETH_USDT_RATE = ($dataBinanceJson[12]->price);
-        $ETH_RUB_RATE_binance = $ETH_USDT_RATE * $usd_rub_rate_moex;
-
+//      echo '<pre>';
+//      var_dump($dataBinanceJson);
+//      echo '</pre>';
+        $BTC_USDT_RATE_binance = ($dataBinanceJson[11]->price);  // Курс бита в баксах моекс
+        $BTC_RUB_RATE = $BTC_USDT_RATE_binance * $usd_rub_rate_moex; //курс бита в рублях
+        $BTC_EUR_RATE = $BTC_RUB_RATE / $eur_rub_rate_moex; // курс бита в евро
+        $USD_EUR_RATE = $usd_rub_rate_moex/$eur_rub_rate_moex; // курс бакса к евро
+        $ETH_USDT_RATE = ($dataBinanceJson[12]->price);  //курс эфира к баксу
+        $ETH_RUB_RATE_binance = $ETH_USDT_RATE * $usd_rub_rate_moex; // курс эфира к рублю
+        $LTC_USDT_RATE = ($dataBinanceJson[190]->price); // курс лайткоин к баксу
+        $LTC_RUB_RATE = $usd_rub_rate_moex * $LTC_USDT_RATE;
+        $XRP_USDT_RATE = ($dataBinanceJson[308]->price); //курс риппл к баксу
+        $XRP_RUB_RATE  = $usd_rub_rate_moex * $XRP_USDT_RATE; //курс риппл к рублю
+        $BCH_USDT_RATE = ($dataBinanceJson[667]->price); //курс биткоинкэш к баксу
+        $BCH_RUB_RATE  = $usd_rub_rate_moex * $BCH_USDT_RATE; //курс BCH к рублю
+        $BNB_USDT_RATE = ($dataBinanceJson[98]->price); //курс BNB к баксу
+        $BNB_RUB_RATE  = $usd_rub_rate_moex * $BNB_USDT_RATE; //курс BNB к рублю
+//      echo '<pre>';
+//      var_dump($LTC_USDT_RATE);
+//      var_dump($LTC_RUB_RATE);
+//      var_dump($XRP_USDT_RATE);
+//      var_dump($XRP_RUB_RATE);
+//      var_dump($BCH_RUB_RATE);
+//      var_dump($BCH_USDT_RATE);
+//      var_dump($BNB_USDT_RATE);
+//      var_dump($BNB_RUB_RATE);
+//      echo '</pre>';
         ?>
 
-<!--        <div class="header-rates__wrap">-->
 
-            <div class="str">12332
-<!--                    1222 USD =  --><?php //echo round($usd_rub_rate_moex,2). " RUB "; ?><!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-<!--                    1 BTC =  --><?php //echo round($BTC_RUB_RATE, 2). " RUB"; ?><!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-<!--                    1 BTC =  --><?php //echo round($BTC_USDT_RATE_binance, 2). " USD"; ?><!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-<!--                    1 ETH =  --><?php //echo round($ETH_RUB_RATE_binance, 2). " RUB"; ?><!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-<!--                    1 ETH =  --><?php //echo round($ETH_USDT_RATE, 2). " USD"; ?><!--</></div>-->
+<div class="load1">
+            <div class="str">
+                <div class="currency_wrap">
+                    <div class="currency">1 USD =  <?php echo round($usd_rub_rate_moex,2). " RUB "; ?></div>
+                    <div class="currency">1 USD =  <?php echo round($USD_EUR_RATE,2). " EUR "; ?></div>
+                    <div class="currency">1 EUR = <?php echo round($eur_rub_rate_moex,2). " RUB "; ?></div>
+                    <div class="currency">1 CNY = <?php echo round($cny_rub_rate_moex,2). " RUB "; ?></div>
+                    <div class="currency">1 BTC =  <?php echo round($BTC_RUB_RATE, 2). " RUB"; ?></div>
+                    <div class="currency">1 BTC =  <?php echo round($BTC_USDT_RATE_binance, 2). " USD"; ?></div>
+                    <div class="currency">1 BTC =  <?php echo round($BTC_EUR_RATE, 2). " EUR"; ?></div>
+                    <div class="currency">1 ETH =  <?php echo round($ETH_RUB_RATE_binance, 2). " RUB"; ?></div>
+                    <div class="currency">1 ETH =  <?php echo round($ETH_USDT_RATE, 2). " USD"; ?></div>
+                    <div class="currency">1 LTC =  <?php echo round($LTC_USDT_RATE, 2). " USD"; ?></div>
+                    <div class="currency">1 LTC =  <?php echo round($LTC_RUB_RATE, 2). " RUB"; ?></div>
+                    <div class="currency">1 XRP =  <?php echo round($XRP_USDT_RATE, 2). " USD"; ?></div>
+                    <div class="currency">1 XRP =  <?php echo round($XRP_RUB_RATE, 2). " RUB"; ?></div>
+                    <div class="currency">1 BCH =  <?php echo round($BCH_USDT_RATE, 2). " USD"; ?></div>
+                    <div class="currency">1 BCH =  <?php echo round($BCH_USDT_RATE, 2). " RUB"; ?></div>
+                    <div class="currency">1 BNB =  <?php echo round($BNB_USDT_RATE, 2). " USD"; ?></div>
+                    <div class="currency">1 BNB =  <?php echo round($BNB_RUB_RATE, 2). " RUB"; ?></div>
+                </div>
             </div>
+</div>
 
-    </div>
 </div>
 <div id="container">
-
- <!--Техобслуживание-->
-	<!--<div class="headline">-->
-	<!--    Внимание! Сайт на техобслуживании. Некоторые пары обмена могут быть недоступны. Приносим извинения за неудобства.-->
-	<!--</div>-->
-<!--Техобслуживание-->
-
-
-
-
     <div id="header">
 	    <div class="header">
-
 		    <div class="logo">
 		        <a href="<?php echo $or_site_url;?>">
 		            <img src="/wp-content/themes/exchangeboxtheme2/images/logo_selectcash.svg" alt="Logo Select.cash">
@@ -196,32 +237,5 @@ $themechange = get_option('themechange');
 	</div>
 
 	<div id="cwrap">
-		<!-- <div id="menutopped">
-			<div id="topmenu">
-				<div class="topmenu">
-					<?php
-					if($user_id){
-						$theme_location = 'the_top_menu_user';
-					} else {
-						$theme_location = 'the_top_menu';
-					}
-					wp_nav_menu(
-						array(
-							'sort_column' => 'menu_order',
-							'container' => 'div',
-							'container_class' => 'menu',
-							'menu_class' => 'tmenu js_menu',
-							'menu_id' => '',
-							'depth' => '3',
-							'fallback_cb' => 'no_menu',
-							'theme_location' => $theme_location
-						)
-					);
-					?>
-						<div class="clear"></div>
-				</div>
-			</div>
-		</div> -->
-
 		<div class="content">
 			<div class="contentzone">
