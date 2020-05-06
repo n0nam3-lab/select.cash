@@ -32,27 +32,27 @@ $themechange = get_option('themechange');
     <link rel="stylesheet" href="/wp-content/themes/exchangeboxtheme2/liMarquee/liMarquee.css"/>
     <script type="text/javascript" src="/wp-content/themes/exchangeboxtheme2/liMarquee/jquery-1.8.3.min.js"></script>
     <script type="text/javascript"src="/wp-content/themes/exchangeboxtheme2/liMarquee/jquery.liMarquee.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(window).load(function(){
             $('.str').liMarquee();
         });
     </script>
     <style>
-        .load1 {
+        .currency_wrap {
             opacity: 0;
         }
     </style>
-    <script>
+    <script type="text/javascript">
         $('document').ready(function() {
-            $('load1').animate({
+            $('currency_wrap').animate({
                     opacity: 1,
                 }, 500
             );
         });
 
     </script>
- 
+
+    <script src="//code.jivosite.com/widget/y6bVR3NXXs" async></script>
 
 
 </head>
@@ -117,7 +117,7 @@ $themechange = get_option('themechange');
         ?>
 
 
-<div class="load1">
+            <div class="load1">
             <div class="str">
                 <div class="currency_wrap">
                     <div class="currency">1 USD =  <?php echo round($usd_rub_rate_moex,2). " RUB "; ?></div>
