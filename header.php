@@ -37,11 +37,13 @@ $themechange = get_option('themechange');
             $('.str').liMarquee();
         });
     </script>
+<!--    выключаем видимость-->
     <style>
         .currency_wrap {
             opacity: 0;
         }
     </style>
+<!--    включаем видимость если прогрузилось-->
     <script type="text/javascript">
         $('document').ready(function() {
             $('currency_wrap').animate({
